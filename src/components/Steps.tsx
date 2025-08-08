@@ -7,7 +7,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import * as S from '../styles/steps'
 import { stepsData } from '../shared/const/stepsData'
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
+import { ArrowNavigation } from '../shared/ui/arrowNavigation/ArrowNavigation'
 
 export const Steps: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false)
@@ -123,26 +123,15 @@ export const Steps: React.FC = () => {
               </SwiperSlide>
             ))}
           </Swiper>
+          
+          <ArrowNavigation
+            onPrev={() => swiperRef.current?.slidePrev()}
+            onNext={() => swiperRef.current?.slideNext()}
+            disabledPrev={activeIndex === 0}
+            disabledNext={activeIndex === customGroupedSteps.length - 1}
+            showPagination={<S.Pagination className="custom-swiper-pagination" />}
+          />
 
-          <S.ArrowWrapper>
-            <S.Arrow
-              onClick={() => swiperRef.current?.slidePrev()}
-              disabled={activeIndex === 0}
-              aria-label="Previous Slide"
-            >
-              <IconChevronLeft size={24} />
-            </S.Arrow>
-
-            <S.Pagination className="custom-swiper-pagination" />
-
-            <S.Arrow
-              onClick={() => swiperRef.current?.slideNext()}
-              disabled={activeIndex === customGroupedSteps.length - 1}
-              aria-label="Next Slide"
-            >
-              <IconChevronRight size={24} />
-            </S.Arrow>
-          </S.ArrowWrapper>
         </S.SwiperSlideWrapper>
       )}
     </S.Container>

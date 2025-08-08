@@ -88,45 +88,12 @@ export const CounterWrapper = styled.div`
 `;
 
 export const CounterNumber = styled.span`
-  color: var(--color-text); // обычный цвет
+  color: var(--color-text);
 `;
 
 export const CounterTotal = styled.span<CounterTotalProps>`
   color: ${({ $isLast }) => ($isLast ? 'gray' : 'var(--color-text)')};
   margin-left: 4px;
-`;
-
-export const ArrowWrapper = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: center;
-`;
-
-export const Arrow = styled.button<{ disabled?: boolean }>`
-  font-size: 28px;
-  color: var(--color-white);
-  width: 50px;
-  height: 50px;
-  background: var(--color-black);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.3s ease, opacity 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    background: ${({ disabled }) => (disabled ? 'var(--color-text-grey)' : 'var(--color-yellow)')};
-    border: transparent;
-  }
-
-  ${({ disabled }) =>
-    disabled &&
-    `
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-  `}
 `;
 
 export const Card = styled.div`

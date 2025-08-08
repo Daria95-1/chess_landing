@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -8,47 +7,24 @@ import { chessChampions } from '../shared/const/chessChampions';
 import * as S from '../styles/participants';
 import SwiperClass from 'swiper';
 import { CustomButton } from '../shared/ui/button/Button';
+import { ArrowNavigation } from '../shared/ui/arrowNavigation/ArrowNavigation';
 
 export const Participants = () => {
   const [itemsPerSlide, setItemsPerSlide] = useState(3);
   const totalParticipants = chessChampions.length;
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      if (width <= 830) {
-        setItemsPerSlide(1);
-      } else if (width <= 1200) {
-        setItemsPerSlide(2);
-      } else {
-        setItemsPerSlide(3);
-      }
+      setItemsPerSlide(width <= 830 ? 1 : width <= 1200 ? 2 : 3);
     };
 
-    handleResize(); // установить при монтировании
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  useEffect(() => {
-    if (
-      swiperInstance &&
-      typeof swiperInstance.params.navigation === 'object' &&
-      prevRef.current &&
-      nextRef.current
-    ) {
-      swiperInstance.params.navigation.prevEl = prevRef.current;
-      swiperInstance.params.navigation.nextEl = nextRef.current;
-      swiperInstance.navigation.destroy();
-      swiperInstance.navigation.init();
-      swiperInstance.navigation.update();
-    }
-  }, [swiperInstance]);
 
   const onSlideChange = (swiper: SwiperClass) => {
     setActiveIndex(swiper.activeIndex);
@@ -68,14 +44,12 @@ export const Participants = () => {
             <S.CounterNumber>{shownParticipants}</S.CounterNumber>
             <S.CounterTotal $isLast={isLast}>/{totalParticipants}</S.CounterTotal>
           </S.CounterWrapper>
-          <S.ArrowWrapper>
-            <S.Arrow ref={prevRef} disabled={isFirst} aria-label="Предыдущий слайд">
-              <IconChevronLeft size={24} />
-            </S.Arrow>
-            <S.Arrow ref={nextRef} disabled={isLast} aria-label="Следующий слайд">
-              <IconChevronRight size={24} />
-            </S.Arrow>
-          </S.ArrowWrapper>
+          <ArrowNavigation
+            onPrev={() => swiperInstance?.slidePrev()}
+            onNext={() => swiperInstance?.slideNext()}
+            disabledPrev={isFirst}
+            disabledNext={isLast}
+          />
         </S.DesktopCounterNav>
       </S.FirstBlock>
 
@@ -91,15 +65,9 @@ export const Participants = () => {
           observer={true}
           observeParents={true}
           breakpoints={{
-            0: {
-              slidesPerView: 1,
-            },
-            831: {
-              slidesPerView: 2,
-            },
-            1201: {
-              slidesPerView: 3,
-            },
+            0: { slidesPerView: 1 },
+            831: { slidesPerView: 2 },
+            1201: { slidesPerView: 3 },
           }}
         >
           {chessChampions.map((chessman, idx) => (
@@ -125,19 +93,18 @@ export const Participants = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+
         <S.MobileCounterNav>
           <S.CounterWrapper>
             <S.CounterNumber>{shownParticipants}</S.CounterNumber>
             <S.CounterTotal $isLast={isLast}>/{totalParticipants}</S.CounterTotal>
           </S.CounterWrapper>
-          <S.ArrowWrapper>
-            <S.Arrow ref={prevRef} disabled={isFirst} aria-label="Предыдущий слайд">
-              <IconChevronLeft size={24} />
-            </S.Arrow>
-            <S.Arrow ref={nextRef} disabled={isLast} aria-label="Следующий слайд">
-              <IconChevronRight size={24} />
-            </S.Arrow>
-          </S.ArrowWrapper>
+          <ArrowNavigation
+            onPrev={() => swiperInstance?.slidePrev()}
+            onNext={() => swiperInstance?.slideNext()}
+            disabledPrev={isFirst}
+            disabledNext={isLast}
+          />
         </S.MobileCounterNav>
       </S.SwiperSlideWrapper>
     </S.Container>
