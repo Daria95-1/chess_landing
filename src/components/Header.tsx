@@ -36,6 +36,8 @@ export const Header = () => {
               borderColor="var(--color-black)"
               hoverBgColor="var(--color-black)"
               hoverTextColor="var(--color-white)"
+              mobileBgColor="rgba(255, 255, 255, 0.8)"
+              mobileNoBorder={true} 
             >
               Подробнее о турнире
             </CustomButton>

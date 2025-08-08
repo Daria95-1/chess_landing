@@ -9,6 +9,8 @@ interface ButtonProps {
   hoverBorderColor?: string;
   height?: string;
   width?: string;
+  mobileBgColor?: string;
+  mobileNoBorder?: boolean;
 }
 
 export const CustomButton = styled.button<ButtonProps>`
@@ -34,4 +36,19 @@ export const CustomButton = styled.button<ButtonProps>`
     color: ${({ hoverTextColor, textColor }) => hoverTextColor || textColor || 'var(--color-black)'};
     border-color: transparent;
   }
+
+  @media (max-width: 730px) {
+  width: 300px;
+  height: 40px;
+  font-size: 14px;
+
+  background-color: ${({ mobileBgColor, bgColor }) =>
+    mobileBgColor || bgColor || 'transparent'};
+
+  ${({ mobileNoBorder }) =>
+    mobileNoBorder &&
+    `
+      border: none;
+    `}
+}
 `;

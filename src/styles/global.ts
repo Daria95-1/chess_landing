@@ -7,6 +7,7 @@ export const GlobalStyles = createGlobalStyle`
 
   :root {
     --color-white: #ffffff;
+    --color-white-opacity: rgba(255, 255, 255, 0.6);
     --color-grey: #D0D0D0;
     --color-beige: #E9DED4;
     --color-yellow: #FBCE51;
@@ -49,5 +50,15 @@ export const GlobalStyles = createGlobalStyle`
 
   button {
     cursor: pointer;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: none;
   }
 `;

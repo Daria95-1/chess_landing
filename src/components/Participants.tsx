@@ -10,14 +10,30 @@ import SwiperClass from 'swiper';
 import { CustomButton } from '../shared/ui/button/Button';
 
 export const Participants = () => {
-  const itemsPerSlide = 3;
+  const [itemsPerSlide, setItemsPerSlide] = useState(3);
   const totalParticipants = chessChampions.length;
-  const totalSlides = Math.ceil(totalParticipants / itemsPerSlide);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 830) {
+        setItemsPerSlide(1);
+      } else if (width <= 1200) {
+        setItemsPerSlide(2);
+      } else {
+        setItemsPerSlide(3);
+      }
+    };
+
+    handleResize(); // установить при монтировании
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (
@@ -38,6 +54,7 @@ export const Participants = () => {
     setActiveIndex(swiper.activeIndex);
   };
 
+  const totalSlides = Math.ceil(totalParticipants / itemsPerSlide);
   const isFirst = activeIndex === 0;
   const isLast = activeIndex === totalSlides - 1;
   const shownParticipants = Math.min((activeIndex + 1) * itemsPerSlide, totalParticipants);
@@ -46,7 +63,7 @@ export const Participants = () => {
     <S.Container>
       <S.FirstBlock>
         <S.Title>Участники турнира</S.Title>
-        <S.CounterNav>
+        <S.DesktopCounterNav>
           <S.CounterWrapper>
             <S.CounterNumber>{shownParticipants}</S.CounterNumber>
             <S.CounterTotal $isLast={isLast}>/{totalParticipants}</S.CounterTotal>
@@ -59,13 +76,13 @@ export const Participants = () => {
               <IconChevronRight size={24} />
             </S.Arrow>
           </S.ArrowWrapper>
-        </S.CounterNav>
+        </S.DesktopCounterNav>
       </S.FirstBlock>
 
       <S.SwiperSlideWrapper>
         <Swiper
           modules={[Navigation]}
-          slidesPerView={3}
+          slidesPerView={itemsPerSlide}
           spaceBetween={30}
           onSwiper={setSwiperInstance}
           onSlideChange={onSlideChange}
@@ -73,6 +90,17 @@ export const Participants = () => {
           loop={false}
           observer={true}
           observeParents={true}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            831: {
+              slidesPerView: 2,
+            },
+            1201: {
+              slidesPerView: 3,
+            },
+          }}
         >
           {chessChampions.map((chessman, idx) => (
             <SwiperSlide key={idx}>
@@ -83,7 +111,7 @@ export const Participants = () => {
                 <S.Name>{chessman.name}</S.Name>
                 <S.Role>{chessman.title}</S.Role>
                 <CustomButton
-                  width="113px"
+                  width="113px !important"
                   height="35px"
                   bgColor="transparent"
                   textColor="var(--color-blue)"
@@ -97,6 +125,20 @@ export const Participants = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        <S.MobileCounterNav>
+          <S.CounterWrapper>
+            <S.CounterNumber>{shownParticipants}</S.CounterNumber>
+            <S.CounterTotal $isLast={isLast}>/{totalParticipants}</S.CounterTotal>
+          </S.CounterWrapper>
+          <S.ArrowWrapper>
+            <S.Arrow ref={prevRef} disabled={isFirst} aria-label="Предыдущий слайд">
+              <IconChevronLeft size={24} />
+            </S.Arrow>
+            <S.Arrow ref={nextRef} disabled={isLast} aria-label="Следующий слайд">
+              <IconChevronRight size={24} />
+            </S.Arrow>
+          </S.ArrowWrapper>
+        </S.MobileCounterNav>
       </S.SwiperSlideWrapper>
     </S.Container>
   );
